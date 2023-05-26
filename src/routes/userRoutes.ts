@@ -6,9 +6,11 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userController";
+import { signup } from "../controllers/authController";
 
 const router = Router();
 
+router.post("/signup", signup);
 router
   .route("/")
   .get(getAllUsers)
