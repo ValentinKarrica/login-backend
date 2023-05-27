@@ -1,20 +1,14 @@
 import { Router } from "express";
-import {
-  getAllUsers,
-  createUser,
-  getUser,
-  updateUser,
-  deleteUser,
-} from "../controllers/userController";
-import { signup } from "../controllers/authController";
+import { getUser, updateUser, deleteUser } from "../controllers/userController";
+import { signup, login, protect } from "../controllers/authController";
 
 const router = Router();
 
 router.post("/signup", signup);
-router
-  .route("/")
-  .get(getAllUsers)
-  .post(createUser);
+router.post("/login", login);
+
+// Protect all routes after this middleware
+router.use(protect);
 
 router
   .route("/:id")

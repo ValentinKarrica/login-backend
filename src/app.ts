@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import userRouter from "./routes/userRoutes";
 import morgan from "morgan";
+import AppError from "./utils/appError";
+import globalErrorHandler from "./controllers/errorControler";
 
 const app: Express = express();
 
@@ -22,10 +24,8 @@ app.use((req: any, res, next) => {
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
-  res.status(404).json({
-    status: "fail",
-    message: `Can't find ${req.originalUrl} on this server!`,
-  });
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
+app.use(globalErrorHandler);
 export default app;

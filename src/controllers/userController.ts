@@ -1,24 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import catchAsync from "../utils/catchAsync";
 
-export const getAllUsers = (req: Request, res: Response) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
-  });
-};
-export const createUser = (req: Request, res: Response, next: NextFunction) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
-  });
-};
-
-export const getUser = (req: Request, res: Response) => {
+export const getUser = catchAsync(async (req: Request, res: Response) => {
   res.status(500).json({
     status: "error",
     message: "This rout is not yet defined",
   });
-};
+});
 
 export const updateUser = (req: Request, res: Response) => {
   res.status(500).json({
@@ -26,6 +14,7 @@ export const updateUser = (req: Request, res: Response) => {
     message: "This rout is not yet defined",
   });
 };
+
 export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({
     status: "error",
