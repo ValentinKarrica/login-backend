@@ -8,6 +8,7 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "tsc -w & nodemon dist/index.js",
+    "start:prod": "NODE_ENV=production tsc -w & nodemon dist/index.js",
     "debug": "ndb tsc -w & nodemon dist/index.js"
   },
   "author": "Valentin Karrica",
@@ -30,8 +31,10 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.2.4",
