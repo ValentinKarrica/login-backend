@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import app from "./app";
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const uri = process.env.URI;
 uri &&
