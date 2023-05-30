@@ -3,8 +3,10 @@ import userRouter from "./routes/userRoutes";
 import morgan from "morgan";
 import AppError from "./utils/appError";
 import globalErrorHandler from "./controllers/errorControler";
+var cors = require("cors");
 
 const app: Express = express();
+app.use(cors());
 
 // 1) MIDDLEWARE
 // auto run for development env
@@ -28,4 +30,5 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
+
 export default app;

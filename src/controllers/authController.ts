@@ -14,10 +14,11 @@ const getToken = (id: string) => {
 
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, password, passwordConfirm } = req.body;
+    const { name, lastName, email, password, passwordConfirm } = req.body;
     const newUser = await User.create({
       name,
       email,
+      lastName,
       password,
       passwordConfirm,
     });

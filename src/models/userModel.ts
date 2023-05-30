@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 
 interface IUser {
   name: string;
+  lastName: string;
   email: string;
   photo: string | undefined;
   password: string;
@@ -13,7 +14,18 @@ interface IUser {
 }
 
 const userSchema = new Schema<IUser>({
-  name: { type: String, required: [true, "Name is required"] },
+  name: {
+    type: String,
+    required: [true, "Name is required"],
+    minlength: [2, "Name must have more or equal then 2 characters"],
+    maxlength: [15, "Name must have less or equal then 15 characters"],
+  },
+  lastName: {
+    type: String,
+    required: [true, "Last Name is required"],
+    minlength: [2, "Last name must have more or equal then 2 characters"],
+    maxlength: [20, "Last name must have less or equal then 20 characters"],
+  },
   email: {
     type: String,
     required: [true, "Email is required"],
@@ -25,7 +37,8 @@ const userSchema = new Schema<IUser>({
   password: {
     type: String,
     required: [true, "Please provide your password"],
-    minlength: 8,
+    minlength: [8, "Password must have more or equal then 8 characters"],
+    maxlength: [20, "Password must have less or equal then 20 characters"],
     select: false,
   },
   passwordConfirm: {
