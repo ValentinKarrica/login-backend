@@ -1,9 +1,9 @@
 //@ts-ignore
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
-import app from "./app";
 
 dotenv.config({ path: "./.env" });
+import app from "./app";
 
 const uri = process.env.URI;
 uri &&

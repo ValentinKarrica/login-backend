@@ -8,7 +8,7 @@ var cors = require("cors");
 const app: Express = express();
 app.use(cors());
 
-// 1) MIDDLEWARE
+// MIDDLEWARE
 // auto run for development env
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -22,13 +22,14 @@ app.use((req: any, res, next) => {
   next();
 });
 
-// 2) ROUTES
+//  ROUTES
 app.use("/api/v1/users", userRouter);
 
+// Catch all other Error
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
+// Error Handler
 app.use(globalErrorHandler);
 
 export default app;

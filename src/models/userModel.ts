@@ -1,16 +1,16 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 // const bcrypt = require('bcryptjs');
 
-interface IUser {
+export interface IUser {
   name: string;
   lastName: string;
   email: string;
-  photo: string | undefined;
   password: string;
-  passwordConfirm: string | undefined;
-  passwordChangedAt: Date | undefined;
+  photo?: string;
+  passwordConfirm?: string;
+  passwordChangedAt?: Date;
 }
 
 const userSchema = new Schema<IUser>({
@@ -48,15 +48,14 @@ const userSchema = new Schema<IUser>({
   passwordChangedAt: Date,
 });
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   // Check password and confirm password are same
   if (this.password && this.passwordConfirm) {
-    let isSame = this.password === this.passwordConfirm;
-    if (!isSame) {
+    let isPasswordConfirmed = this.password === this.passwordConfirm;
+    if (!isPasswordConfirmed) {
       throw Error("Password and Confirm password did not match");
     }
   }
-
   // Only run this function if password was actually modified
   if (!this.isModified("password")) return next();
 
@@ -68,14 +67,14 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-userSchema.methods.correctPassword = async function(
+userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
     return JWTTimestamp < changedTimestamp;

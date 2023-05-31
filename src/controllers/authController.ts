@@ -1,14 +1,33 @@
 import { Response, Request, NextFunction } from "express";
 import User from "../models/userModel";
-import jwt, { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import AppError from "../utils/appError";
 import catchAsync from "../utils/catchAsync";
 import { promisify } from "util";
 import { JwtPayload } from "jsonwebtoken";
 
+//Get Token form jwt
 const getToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+const createSendToken = (
+  user: any,
+  statusCode: number,
+  req: Request,
+  res: Response
+) => {
+  const token = getToken(user._id);
+
+  // Remove password & __v from output
+  user.password = undefined;
+  user.__v = undefined;
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    user,
   });
 };
 
@@ -22,15 +41,7 @@ export const signup = catchAsync(
       password,
       passwordConfirm,
     });
-
-    const token = getToken(newUser._id);
-    res.status(201).json({
-      status: "success",
-      token,
-      data: {
-        user: newUser,
-      },
-    });
+    createSendToken(newUser, 201, req, res);
   }
 );
 
@@ -46,18 +57,11 @@ export const login = catchAsync(
     // 2) Check if user exists && password is correct
     const user = await User.findOne({ email }).select("+password");
     if (!user || !(await user.correctPassword(password, user.password))) {
-      return next(new AppError("Incorrect email or password", 401));
+      return next(new AppError("Incorrect email or password", 400));
     }
 
     // 3) If everything ok, send token to client
-    const token = getToken(user._id);
-    res.status(201).json({
-      status: "success",
-      token,
-      data: {
-        user: user,
-      },
-    });
+    createSendToken(user, 200, req, res);
   }
 );
 
@@ -106,6 +110,9 @@ export const protect = catchAsync(
     }
 
     // ACCESS TO PROTECTED ROUTE
+    // @ts-ignore
+    req.user = currentUser;
+    res.locals.user = currentUser;
     next();
   }
 );
