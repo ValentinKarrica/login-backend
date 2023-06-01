@@ -13,9 +13,7 @@ const sendResponse = (
   user.__v = undefined;
   res.status(statusCode).json({
     status: "success",
-    data: {
-      user,
-    },
+    user,
   });
 };
 export const getUser = catchAsync(
