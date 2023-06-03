@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && npx tsc",
+    "prod": "NODE_ENV=production  nodemon dist/index.js",
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "tsc -w & nodemon dist/index.js",
-    "start:prod": "NODE_ENV=production tsc -w & nodemon dist/index.js",
     "debug": "ndb tsc -w & nodemon dist/index.js"
   },
   "author": "Valentin Karrica",

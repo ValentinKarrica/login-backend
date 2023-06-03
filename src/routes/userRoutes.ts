@@ -5,6 +5,7 @@ import {
   login,
   protect,
   verifyToken,
+  updatePassword,
 } from "../controllers/authController";
 
 const router = Router();
@@ -15,6 +16,7 @@ router.get("/verify", verifyToken);
 
 // Protect all routes after this middleware
 router.use(protect);
+router.post("/updatePassword", updatePassword);
 
 router
   .route("/:id")

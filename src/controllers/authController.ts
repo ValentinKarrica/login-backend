@@ -68,8 +68,6 @@ export const login = catchAsync(
 export const protect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // 1) Getting token and check of it's there
-    console.log("From Verify: ");
-
     let token;
     if (
       req.headers.authorization &&
@@ -123,8 +121,6 @@ export const protect = catchAsync(
 export const verifyToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // 1) Getting token and check of it's there
-    console.log("From Verify: ");
-
     let token;
     if (
       req.headers.authorization &&
@@ -169,10 +165,31 @@ export const verifyToken = catchAsync(
     //Verify token success
     currentUser.password = undefined;
     currentUser.__v = undefined;
-    res.status(200).json({
-      status: "success",
-      token,
-      user: currentUser,
-    });
+
+    createSendToken(currentUser, 200, req, res);
   }
 );
+
+export const updatePassword = catchAsync(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  // 1) Get user from collection
+
+  //@ts-ignore
+  const user = await User.findById(req.user.id).select("+password");
+
+  // 2) Check if POSTed current password is correct
+
+  if (!(await user.correctPassword(req.body.oldPassword, user.password))) {
+    return next(new AppError("Your current password is wrong!", 400));
+  }
+  // 3) If so, update password
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.newPasswordConfirm;
+  await user.save();
+
+  // 4) Log user in, send JWT
+  createSendToken(user, 200, req, res);
+});
