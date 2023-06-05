@@ -12,7 +12,7 @@ const router = Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
-router.get("/verify", verifyToken);
+router.post("/verify", verifyToken);
 
 // Protect all routes after this middleware
 router.use(protect);

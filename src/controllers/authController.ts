@@ -20,13 +20,20 @@ const createSendToken = (
   res: Response
 ) => {
   const token = getToken(user._id);
+  res.cookie("jwt", token, {
+    expires: new Date(Date.now() + 120 * 60 * 1000),
+    httpOnly: true,
+    secure: false,
+    // secure: req.secure || req.headers["x-forwarded-proto"] === "https",
+  });
 
   // Remove password & __v from output
   user.password = undefined;
   user.__v = undefined;
   res.status(statusCode).json({
     status: "success",
-    token,
+
+    // token,    <<<<------- Using cookies to send token
     user,
   });
 };
@@ -127,6 +134,8 @@ export const verifyToken = catchAsync(
       req.headers.authorization.startsWith("Bearer")
     ) {
       token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies.jwt) {
+      token = req.cookies.jwt;
     }
     if (!token) {
       return next(
